@@ -23,56 +23,56 @@ m_verbal_flag(false), m_init_local_pose_check(true), m_waypoint_count(0), m_priv
     m_local_pos_pub = m_nh.advertise<geometry_msgs::PoseStamped>
             ("mavros/setpoint_position/local", 10);
 
-    // m_arming_client = m_nh.serviceClient<mavros_msgs::CommandBool>
-    //         ("mavros/cmd/arming");
-    // m_set_mode_client = m_nh.serviceClient<mavros_msgs::SetMode>
-    //         ("mavros/set_mode");
+    m_arming_client = m_nh.serviceClient<mavros_msgs::CommandBool>
+            ("mavros/cmd/arming");
+    m_set_mode_client = m_nh.serviceClient<mavros_msgs::SetMode>
+            ("mavros/set_mode");
 
-    //the setpoint publishing rate MUST be faster than 2Hz
-    // ros::Rate rate(20.0);
+    the setpoint publishing rate MUST be faster than 2Hz
+    ros::Rate rate(20.0);
 
-    //send a few setpoints before starting
-    // for(int i = 100; ros::ok() && i > 0; --i){
-    //     geometry_msgs::PoseStamped pose;
-    //     pose.pose.position.x = 0;
-    //     pose.pose.position.y = 0;
-    //     pose.pose.position.z = 5;
-    //     m_local_pos_pub.publish(pose);
-    //     ros::spinOnce();
-    //     rate.sleep();
-    // }
+    send a few setpoints before starting
+    for(int i = 100; ros::ok() && i > 0; --i){
+        geometry_msgs::PoseStamped pose;
+        pose.pose.position.x = 0;
+        pose.pose.position.y = 0;
+        pose.pose.position.z = 5;
+        m_local_pos_pub.publish(pose);
+        ros::spinOnce();
+        rate.sleep();
+    }
 
-    // wait for FCU connection
-    // while(ros::ok() && m_current_state.connected){
-    //     ros::spinOnce();
-    //     rate.sleep();
-    // }
+    wait for FCU connection
+    while(ros::ok() && m_current_state.connected){
+        ros::spinOnce();
+        rate.sleep();
+    }
 
-    // mavros_msgs::SetMode offb_set_mode;
-    // offb_set_mode.request.custom_mode = "OFFBOARD";
+    mavros_msgs::SetMode offb_set_mode;
+    offb_set_mode.request.custom_mode = "GUIDED";
 
-    // mavros_msgs::CommandBool arm_cmd;
-    // arm_cmd.request.value = true;
+    mavros_msgs::CommandBool arm_cmd;
+    arm_cmd.request.value = true;
 
-    // ros::Time last_request = ros::Time::now();
+    ros::Time last_request = ros::Time::now();
 
-    // if( m_current_state.mode != "OFFBOARD" &&
-    //     (ros::Time::now() - last_request > ros::Duration(5.0))){
-    //     if( m_set_mode_client.call(offb_set_mode) &&
-    //         offb_set_mode.response.success){
-    //         ROS_INFO("Offboard enabled");
-    //     }
-    //     last_request = ros::Time::now();
-    // } else {
-    //     if( !m_current_state.armed &&
-    //         (ros::Time::now() - last_request > ros::Duration(5.0))){
-    //         if( m_arming_client.call(arm_cmd) &&
-    //             arm_cmd.response.success){
-    //             ROS_INFO("Vehicle armed");
-    //         }
-    //         last_request = ros::Time::now();
-    //     }
-    // }
+    if( m_current_state.mode != "GUIDED" &&
+        (ros::Time::now() - last_request > ros::Duration(5.0))){
+        if( m_set_mode_client.call(offb_set_mode) &&
+            offb_set_mode.response.success){
+            ROS_INFO("GUIDED enabled");
+        }
+        last_request = ros::Time::now();
+    } else {
+        if( !m_current_state.armed &&
+            (ros::Time::now() - last_request > ros::Duration(5.0))){
+            if( m_arming_client.call(arm_cmd) &&
+                arm_cmd.response.success){
+                ROS_INFO("Vehicle armed");
+            }
+            last_request = ros::Time::now();
+        }
+    }
 
     get_waypoint();
 }
