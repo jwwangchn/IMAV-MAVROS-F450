@@ -3,8 +3,8 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
-// #include <mavros_msgs/CommandBool.h>
-// #include <mavros_msgs/SetMode.h>
+#include <mavros_msgs/CommandBool.h>
+#include <mavros_msgs/SetMode.h>
 #include <mavros_msgs/State.h>
 #include <vector>
 
@@ -23,8 +23,8 @@ private:
 	//Publisher
 	ros::Publisher m_local_pos_pub;
 
-	// ros::ServiceClient m_arming_client;
-	// ros::ServiceClient m_set_mode_client;
+	ros::ServiceClient m_arming_client;
+	ros::ServiceClient m_set_mode_client;
 
 	bool m_verbal_flag;
 
