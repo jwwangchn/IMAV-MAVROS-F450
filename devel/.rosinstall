@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /root/Documents/IMAV/IMAV-MAVROS-F450/devel/setup.sh
+    local-name: /home/ubuntu/Documents/IMAV/IMAV-MAVROS-F450/devel/setup.sh

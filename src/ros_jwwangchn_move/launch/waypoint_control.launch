@@ -1,0 +1,6 @@
+<launch>
+  <node type="ros_jwwangchn_move_node" pkg="ros_jwwangchn_move" name="offb_node" output="screen">
+  	<param name="verbal_flag" type="bool" value="true" />
+    <rosparam file="$(find ros_jwwangchn_move)/yaml/waypoint_points.yaml" command="load" />
+  </node>
+</launch>
