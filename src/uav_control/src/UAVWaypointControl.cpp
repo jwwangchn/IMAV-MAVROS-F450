@@ -19,6 +19,7 @@ m_verbal_flag(false), m_init_local_pose_check(true), m_waypoint_count(0), m_priv
     m_init_local_pos_sub = m_nh.subscribe<geometry_msgs::PoseStamped>
             ("mavros/local_position/pose", 10, &UAVWaypointControl::init_pose_cb, this);
 
+
     // Publisher
     m_local_pos_pub = m_nh.advertise<geometry_msgs::PoseStamped>
             ("mavros/setpoint_position/local", 10);
@@ -49,14 +50,14 @@ m_verbal_flag(false), m_init_local_pose_check(true), m_waypoint_count(0), m_priv
      }
 
      mavros_msgs::SetMode offb_set_mode;
-     offb_set_mode.request.custom_mode = "GUIDED";
+     offb_set_mode.request.custom_mode = "ALT_HOLD";
 
      mavros_msgs::CommandBool arm_cmd;
      arm_cmd.request.value = true;
 
      ros::Time last_request = ros::Time::now();
 
-     if( m_current_state.mode != "GUIDED" &&
+     if( m_current_state.mode != "ALT_HOLD" &&
          (ros::Time::now() - last_request > ros::Duration(5.0))){
         if( m_set_mode_client.call(offb_set_mode) &&
              offb_set_mode.response.success){
